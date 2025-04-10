@@ -301,4 +301,418 @@ If you encounter a merge conflict when pushing your changes, follow these steps:
 By following these steps, you should be able to set up your local project and commit it to a new GitHub repository. If you encounter any issues or have further questions, feel free to ask!
 ```
 
+# 📝 Step-by-Step Guide to Set Up SQLite Database for Dietary Recommender System
+
+## Prerequisites
+- **Python**: Ensure you have Python installed on your system.
+- **SQLite3**: SQLite3 is included with Python, so no additional installation is required.
+- **Pandas**: Install pandas for data manipulation. You can install it using pip:
+  ```bash
+  pip install pandas
+  ```
+
+## Step 1: Set Up the Environment
+
+1. **Install Required Libraries**:
+   - Open a terminal or command prompt and run:
+     ```bash
+     pip install pandas
+     ```
+
+## Step 2: Define Features and Functions
+
+List the features and functions you wish to build:
+1. **User Profile Intake**:
+   - Activity Level
+   - Health Conditions
+   - Meal Timing Preferences
+2. **Nutritional Needs Calculator**:
+   - Customizable Goals
+   - Microbiome Considerations
+3. **Cuisine-Specific Food Database**:
+   - Seasonal Ingredients
+   - Recipe Variations
+   - User Contributions
+4. **Recommendation Engine**:
+   - Feedback Loop
+   - Meal Planning
+   - Nutritional Education
+
+## Step 3: Form the Table Structures
+
+Based on the features, define the necessary tables:
+
+1. **User Profiles Table**:
+   - `id`: Unique identifier for the user.
+   - `age`: User's age.
+   - `gender`: User's gender.
+   - `weight`: User's weight.
+   - `height`: User's height.
+   - `activity_level`: User's activity level.
+   - `health_conditions`: User's existing health conditions.
+   - `meal_timing_preferences`: User's meal timing preferences.
+   - `custom_goals`: User's specific health goals.
+
+2. **Food Items Table**:
+   - `id`: Unique identifier for the food item.
+   - `name`: Name of the food item.
+   - `region`: Region or country of origin.
+   - `food_type`: Type of food.
+   - `preparation_method`: Method of preparation.
+   - `dietary_tags`: Dietary tags.
+   - `calories`: Caloric content.
+   - `protein`: Protein content.
+   - `carbohydrates`: Carbohydrate content.
+   - `fat`: Fat content.
+   - `seasonal`: Seasonal availability.
+   - `recipe_variations`: Variations of the recipe.
+
+3. **Nutritional Needs Table**:
+   - `id`: Unique identifier for the nutritional needs entry.
+   - `user_id`: Foreign key linking to the user_profiles table.
+   - `caloric_needs`: Daily caloric needs.
+   - `protein_needs`: Daily protein needs.
+   - `carbohydrates_needs`: Daily carbohydrate needs.
+   - `fat_needs`: Daily fat needs.
+   - `custom_goals`: Custom nutritional goals.
+
+## Step 4: Create the Database and Tables
+
+1. **Create the Database File**:
+   ```python
+   import sqlite3
+
+   def create_database(db_file):
+       conn = sqlite3.connect(db_file)
+       conn.close()
+
+   create_database('food_database.db')
+   ```
+
+2. **Create the Tables**:
+   ```python
+   def create_tables(db_file):
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS user_profiles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            age INTEGER,
+            gender TEXT,
+            weight REAL,
+            height REAL,
+            activity_level TEXT,
+            health_conditions TEXT,
+            meal_timing_preferences TEXT,
+            custom_goals TEXT
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS food_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            region TEXT,
+            food_type TEXT,
+            preparation_method TEXT,
+            dietary_tags TEXT,
+            calories INTEGER,
+            protein INTEGER,
+            carbohydrates INTEGER,
+            fat INTEGER,
+            seasonal TEXT,
+            recipe_variations TEXT
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS nutritional_needs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            caloric_needs INTEGER,
+            protein_needs INTEGER,
+            carbohydrates_needs INTEGER,
+            fat_needs INTEGER,
+            custom_goals TEXT,
+            FOREIGN KEY(user_id) REFERENCES user_profiles(id)
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS recommendations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            food_item_id INTEGER,
+            recommendation_date TEXT,
+            feedback TEXT,
+            FOREIGN KEY(user_id) REFERENCES user_profiles(id),
+            FOREIGN KEY(food_item_id) REFERENCES food_items(id)
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS user_feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            recommendation_id INTEGER,
+            feedback TEXT,
+            feedback_date TEXT,
+            FOREIGN KEY(user_id) REFERENCES user_profiles(id),
+            FOREIGN KEY(recommendation_id) REFERENCES recommendations(id)
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS user_contributions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            food_item_id INTEGER,
+            recipe_name TEXT,
+            recipe_details TEXT,
+            nutritional_info TEXT,
+            contribution_date TEXT,
+            FOREIGN KEY(user_id) REFERENCES user_profiles(id),
+            FOREIGN KEY(food_item_id) REFERENCES food_items(id)
+        )
+    ''')
+
+    conn.commit()
+    conn.close()
+
+create_tables('food_database.db')
+
+   ```
+
+## Step 5: Insert Sample Data
+
+1. **Insert Sample Data into `user_profiles` Table**
+   ```python
+   def insert_user_profile(db_file, age, gender, weight, height, activity_level, health_conditions, meal_timing_preferences, custom_goals):
+       conn = sqlite3.connect(db_file)
+       cursor = conn.cursor()
+
+       cursor.execute('''
+           INSERT INTO user_profiles (age, gender, weight, height, activity_level, health_conditions, meal_timing_preferences, custom_goals)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+       ''', (age, gender, weight, height, activity_level, health_conditions, meal_timing_preferences, custom_goals))
+
+       conn.commit()
+       conn.close()
+
+   insert_user_profile('food_database.db', 25, 'male', 70, 175, 'moderate', 'none', 'standard', 'reduce cholesterol')
+   ```
+
+2. **Insert Sample Data into Tables**
+    **Insert Sample Data into `food_items`**
+   ```python
+   def insert_user_profile(db_file, age, gender, weight, height, activity_level, health_conditions, meal_timing_preferences, custom_goals):
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        INSERT INTO user_profiles (age, gender, weight, height, activity_level, health_conditions, meal_timing_preferences, custom_goals)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (age, gender, weight, height, activity_level, health_conditions, meal_timing_preferences, custom_goals))
+
+    conn.commit()
+    conn.close()
+
+    insert_user_profile('food_database.db', 25, 'male', 70, 175, 'moderate', 'none', 'standard', 'reduce cholesterol')
+
+   ```
+   **Insert Sample Data into `food_items`**
+   ```python
+   def insert_food_item(db_file, name, region, food_type, preparation_method, dietary_tags, calories, protein, carbohydrates, fat, seasonal, recipe_variations):
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        INSERT INTO food_items (name, region, food_type, preparation_method, dietary_tags, calories, protein, carbohydrates, fat, seasonal, recipe_variations)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (name, region, food_type, preparation_method, dietary_tags, calories, protein, carbohydrates, fat, seasonal, recipe_variations))
+
+    conn.commit()
+    conn.close()
+
+    insert_food_item('food_database.db', 'Nasi Lemak', 'Malaysia', 'breakfast', 'cooked', 'halal', 600, 10, 100, 20, 'year-round', 'low-carb version available')
+    insert_food_item('food_database.db', 'Chapati', 'India', 'lunch', 'grilled', 'vegetarian', 300, 5, 50, 10, 'year-round', 'whole wheat version available')
+    insert_food_item('food_database.db', 'Char Kway Teow', 'Malaysia', 'lunch', 'stir-fried', 'halal', 500, 15, 80, 10, 'year-round', 'vegan version available')
+    ```
+
+    **Insert Sample Data into `nutritional_needs`**
+    ```python
+    def insert_nutritional_needs(db_file, user_id, caloric_needs, protein_needs, carbohydrates_needs, fat_needs, custom_goals):
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            INSERT INTO nutritional_needs (user_id, caloric_needs, protein_needs, carbohydrates_needs, fat_needs, custom_goals)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (user_id, caloric_needs, protein_needs, carbohydrates_needs, fat_needs, custom_goals))
+
+        conn.commit()
+        conn.close()
+
+    insert_nutritional_needs('food_database.db', 1, 2000, 100, 250, 70, 'reduce cholesterol')
+    ```
+
+    **Insert Sample Data into `recommendations`**
+    ```python
+    def insert_recommendation(db_file, user_id, food_item_id, recommendation_date, feedback):
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            INSERT INTO recommendations (user_id, food_item_id, recommendation_date, feedback)
+            VALUES (?, ?, ?, ?)
+        ''', (user_id, food_item_id, recommendation_date, feedback))
+
+        conn.commit()
+        conn.close()
+
+    insert_recommendation('food_database.db', 1, 1, '2023-10-01', 'Great recommendation!')
+    ```
+    **Insert Sample Data into `user_feedback`**
+    ```python
+    def insert_user_feedback(db_file, user_id, recommendation_id, feedback, feedback_date):
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            INSERT INTO user_feedback (user_id, recommendation_id, feedback, feedback_date)
+            VALUES (?, ?, ?, ?)
+        ''', (user_id, recommendation_id, feedback, feedback_date))
+
+        conn.commit()
+        conn.close()
+
+    insert_user_feedback('food_database.db', 1, 1, 'Loved the meal!', '2023-10-02')
+    ```
+
+    **Insert Sample Data into `user_contributions`**
+    ```python
+    def insert_user_contribution(db_file, user_id, food_item_id, recipe_name, recipe_details, nutritional_info, contribution_date):
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            INSERT INTO user_contributions (user_id, food_item_id, recipe_name, recipe_details, nutritional_info, contribution_date)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (user_id, food_item_id, recipe_name, recipe_details, nutritional_info, contribution_date))
+
+        conn.commit()
+        conn.close()
+
+    insert_user_contribution('food_database.db', 1, 1, 'Nasi Lemak', 'A traditional Malaysian breakfast dish.', 'Calories: 600, Protein: 10g, Carbohydrates: 100g, Fat: 20g', '2023-10-03')
+    ```
+
+## Step 6: Test the Sample Data
+
+1. **Query the `user_profiles` Table**:
+   ```python
+   def query_user_profiles(db_file):
+       conn = sqlite3.connect(db_file)
+       cursor = conn.cursor()
+
+       cursor.execute('SELECT * FROM user_profiles')
+       rows = cursor.fetchall()
+
+       for row in rows:
+           print(row)
+
+       conn.close()
+
+   query_user_profiles('food_database.db')
+   ```
+
+2. **Test the data**
+    **Query the `food_items` Table**:
+   ```python
+   def query_food_items(db_file):
+       conn = sqlite3.connect(db_file)
+       cursor = conn.cursor()
+
+       cursor.execute('SELECT * FROM food_items')
+       rows = cursor.fetchall()
+
+       for row in rows:
+           print(row)
+
+       conn.close()
+
+   query_food_items('food_database.db')
+   ```
+   
+   **Query the `nutritional_needs`**
+    ```python
+    def query_nutritional_needs(db_file):
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM nutritional_needs')
+        rows = cursor.fetchall()
+
+        for row in rows:
+            print(row)
+
+        conn.close()
+
+    query_nutritional_needs('food_database.db')
+    ```
+
+    **Query the `recommendations`**
+    ```python
+    def query_recommendations(db_file):
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM recommendations')
+        rows = cursor.fetchall()
+
+        for row in rows:
+            print(row)
+
+        conn.close()
+
+    query_recommendations('food_database.db')
+    ```
+    **Query the `user_feedback`**
+    ```python
+    def query_user_feedback(db_file):
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM user_feedback')
+        rows = cursor.fetchall()
+
+        for row in rows:
+            print(row)
+
+        conn.close()
+
+    query_user_feedback('food_database.db')
+    ```
+    **Query the `user_contributions`**
+    ```python
+    def query_user_contributions(db_file):
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM user_contributions')
+        rows = cursor.fetchall()
+
+        for row in rows:
+            print(row)
+
+        conn.close()
+
+    query_user_contributions('food_database.db')
+    ```
+## Summary
+
+By following these steps, you will have set up an SQLite database with the necessary tables and inserted sample data to support your dietary recommendation system. This guide provides a clear and structured approach to setting up the database environment.
+
+```
+
 This guide is now fully formatted in Markdown, ensuring consistency and readability. You can copy this content and paste it into your `README.md` file.
