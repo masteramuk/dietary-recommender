@@ -24,96 +24,173 @@ This project aims to develop a food dietary recommendation system tailored to Ma
 - **Basic UI**: A web app or chatbot-style interface to display recommendations.
 
 ## Project Structure
-
-```
 dietary-recommender/
 │
 ├── data/                  # Food CSV files or datasets
 ├── src/                   # Source code
-│   ├── __init__.py
-│   ├── user_profile.py    # Handles user data input & processing
-│   ├── food_db.py         # Loads & filters food data
-│   ├── recommender.py     # Recommendation engine logic
-├── main.py                # Entry point for simulation
+│   ├── main.py            # Main application logic
+│   ├── llm.py             # LLM initialization and recommendation generation
+│   ├── data.py            # Data loading and preparation
+│   ├── app.py             # Streamlit app for user interaction
 ├── requirements.txt       # Python dependencies
-├── tests/                 # Unit tests
-├── docs/                  # Documentation
 ├── README.md              # Instructions for others to simulate
 └── dietary-recommender.md # Detailed setup guide
-```
+
 
 ## Setup Instructions
 
-### Prerequisites
+### Step 1: Set Up the Project Environment and Necessary Files
 
-- **Python 3.9 or later**: Ensure you have Python installed. You can check by running `python --version`. If not installed, download it from [Python's official website](https://www.python.org/downloads/).
-
-### Steps
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/dietary-recommender.git
-   cd dietary-recommender
-   ```
-
-2. **Create a Virtual Environment**:
-   ```bash
-   python -m venv venv
-   ```
-
-3. **Activate the Virtual Environment**:
-   - On **Windows**:
+1. **Create Project Directory**:
+   - Create a directory for your project and navigate into it.
      ```bash
-     .\venv\Scripts\activate
-     ```
-   - On **macOS/Linux**:
-     ```bash
-     source venv/bin/activate
+     mkdir dietary-recommender
+     cd dietary-recommender
      ```
 
-4. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. **Initialize Git Repository**:
+   - Initialize a new Git repository.
+     ```bash
+     git init
+     ```
 
-5. **Run the Application**:
-   ```bash
-   python main.py
-   ```
+3. **Create Project Structure**:
+   - Create the necessary directories and files.
+     ```bash
+     mkdir src data
+     touch src/main.py src/llm.py src/data.py src/app.py requirements.txt README.md
+     ```
 
-### Additional Setup
+4. **Set Up Virtual Environment**:
+   - Create and activate a virtual environment.
+     ```bash
+     python -m venv venv
+     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+     ```
 
-- **VS Code Setup Tips**:
-  - Install the **Python extension** (if not yet).
-  - Set your interpreter to the virtual environment: Open Command Palette → “Python: Select Interpreter” → choose your `venv`.
+5. **Install Dependencies**:
+-**Install the required libraries**.
+```bash
+      pip install transformers torch faiss-cpu langchain streamlit pandas scikit-learn
+```
+
+6. **Create `requirements.txt`**:
+   - List all the required libraries in this file.
+     ```plaintext
+     transformers
+     torch
+     faiss-cpu
+     langchain
+     streamlit
+     pandas
+     scikit-learn
+     ```
+
+### Step 2: Initialize the LLM and Prepare Sample Data
+
+1. **Initialize the LLM**:
+   - Create a file `src/llm.py` to initialize the Llama 3 model.
+   - Define functions to initialize the LLM and generate recommendations.
+
+2. **Prepare Sample Data**:
+   - Create a file `src/data.py` to handle data loading.
+   - Load sample food data from a CSV file located in the `data/` directory.
+
+3. **Create Sample Dataset**:
+   - Place your sample dataset in the `data/` directory. For example, `data/food_data.csv`.
+
+### Step 3: Develop the Main Application Logic
+
+1. **Main Application Logic**:
+   - Create a file `src/main.py` to implement the main logic for generating recommendations.
+   - Integrate the LLM and data loading functions to generate personalized dietary plans.
+
+### Step 4: Develop the User Interface
+
+1. **Streamlit App**:
+   - Create a file `src/app.py` to develop a simple web app for user interaction.
+   - Use Streamlit to create a user-friendly interface for inputting user profiles and displaying recommendations.
+
+### Step 5: Run the Application and Test It
+
+1. **Run the Streamlit App**:
+   - Save the above code in a file named `app.py` and run it using:
+     ```bash
+     streamlit run src/app.py
+     ```
+
+2. **Test the Application**:
+   - Input user profiles and test the recommendation system.
+   - Ensure the system generates accurate and personalized dietary plans.
+
+## ************************************************
+## **IMPLEMENTATION**
+
+### Step 1: Set Up the Project Environment and Necessary Files
+
+1. **Create Project Directory**:
+   - Create a directory for your project and navigate into it.
+     ```bash
+     mkdir dietary-recommender
+     cd dietary-recommender
+     ```
+
+2. **Configure the Git and setting the branch**
+**Initialize Git Repository**
+   - Initialize a new Git repository.
+     ```bash
+     git init
+     ```
+**Connect to GitHub**
+```bash
+   git remote add origin https://github.com/YourGithubAccount/dietary-recommender.git
+```
+2. **Check the connection to GitHub**
+```bash
+   git remote -v
+```
+3. **stagging and commit**
+```bash
+   git add .
+   git commit -m "your commit message"
+   git push -u origin master 
+   ```replace with your main name```
+```
+3. **create and switch to new branch**
+```bash
+   git checkout -b version1
+   git branch
+   git push -u origin version1
+   git fetch origin
+   git pull origin version1
+   git status
+```
+3. **Create Project Structure**
+- **Create the necessary directories and files**:
+```bash
+  mkdir src data
+  touch src/main.py src/llm.py src/data.py src/app.py requirements.txt README.md
+```
+
+4. **Set Up Virtual Environment**:
+- **Create and activate a virtual environment**.
+```bash
+     python -m venv venv
+     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+```
 
 ## Usage
 
-To use the application, simply run the following command in your terminal:
-
-```bash
-python main.py
-```
-
-This will start the application, and you can interact with it through the provided interface.
+To use the dietary recommendation system, follow the setup instructions to install dependencies and run the Streamlit app. Input your profile information and receive personalized dietary recommendations.
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps to contribute:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature/new-feature`.
-3. Make your changes and commit them: `git commit -m "Add new feature"`.
-4. Push to the branch: `git push origin feature/new-feature`.
-5. Submit a pull request.
+Contributions are welcome! Please read the [contributing guidelines](CONTRIBUTING.md) before submitting a pull request.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
-
-For more detailed setup instructions, refer to the [detailed setup guide](dietary-recommender.md).
-```
-
-This `README.md` file provides a comprehensive overview of your project, including setup instructions and project structure. You can further customize it as needed. If you have any questions or need further assistance, feel free to ask!
+## Problem with Python
+Use pyenv to manage multiple python as you might need to downgrade your python due to some library unable to work with latest pythonvenv.
+You might need to install previous version of python and use pyenv to manage it. I used pyenv in the local to install previous version, copy the path to bash profile, and the execute python3.11 -m venv venv and source venv/bin/activate to start doing it in python3.11 environment.

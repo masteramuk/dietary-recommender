@@ -1,6 +1,8 @@
-# Python dependencies
-pandas
-numpy
+# project dependencies
+transformers
+torch
+faiss-cpu
+langchain
 streamlit
+pandas
 scikit-learn
-matplotlib
